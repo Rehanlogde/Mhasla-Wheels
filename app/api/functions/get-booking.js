@@ -1,0 +1,79 @@
+// /opt/mhasla/app/api/functions/get-booking.js
+import { pool } from "../db.js";
+
+export async function handler(event) {
+  if (event.httpMethod !== "GET") {
+    return { statusCode: 405, body: JSON.stringify({ error: "Method Not Allowed" }) };
+  }
+
+  const booking_code = event.queryStringParameters?.code;
+
+  if (!booking_code) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ ok: false, message: "Missing booking_code" }),
+    };
+  }
+
+  try {
+    // Query booking and join with vehicle details
+    const query = `
+      SELECT 
+        b.id,
+        b.booking_code,
+        b.customer_id,
+        b.name,
+        b.phone,
+        b.email,
+        b.pickup_location,
+        b.drop_location,
+        b.journey_type,
+        b.custom_journey_details,
+        b.depart_date,
+        b.depart_time,
+        b.return_date,
+        b.return_time,
+        b.vehicle_id,
+        b.coupon_code,
+        b.status,
+        b.ride_date,
+        b.created_at,
+        json_build_object(
+          'id', v.id,
+          'name', v.name,
+          'type', v.type,
+          'capacity', v.capacity,
+          'per_km_rate', v.per_km_rate,
+          'image_url', v.image_url
+        ) AS vehicle
+      FROM bookings b
+      LEFT JOIN vehicles v ON b.vehicle_id = v.id
+      WHERE b.booking_code = $1
+      LIMIT 1;
+    `;
+
+    const { rows } = await pool.query(query, [booking_code]);
+
+    if (rows.length === 0) {
+      return {
+        statusCode: 404,
+        body: JSON.stringify({ ok: false, message: "Booking not found" }),
+      };
+    }
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ ok: true, booking: rows[0] }),
+    };
+  } catch (err) {
+    console.error("get-booking error:", err);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        ok: false,
+        message: "Error fetching booking",
+        error: err.message,
+      }),
+    };
+  }
+}

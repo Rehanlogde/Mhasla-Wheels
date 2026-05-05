@@ -1,0 +1,324 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base layout */
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+
+/* ------------------------------------------------------------------
+   Mhasla Wheels Premium Design System - Inspired by Dribbble
+   Black / White / Red theme
+------------------------------------------------------------------- */
+@layer base {
+  :root {
+    /* Brand Primary – Luxury Red */
+    --primary: 0 100% 55%;          /* #FF3B3B */
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 0 100% 65%;
+    --primary-dark: 0 100% 40%;
+
+    /* Secondary – Charcoal Grey */
+    --secondary: 0 0% 10%;          /* #1A1A1A */
+    --secondary-foreground: 0 0% 100%;
+    --secondary-dark: 0 0% 6%;
+
+    /* Neutrals / Backgrounds */
+    --background: 0 0% 4%;          /* Black */
+    --foreground: 0 0% 100%;        /* White */
+    --muted: 0 0% 15%;              /* Muted grey */
+    --muted-foreground: 0 0% 70%;
+
+    /* UI Surfaces */
+    --card: 0 0% 8%;
+    --card-foreground: 0 0% 100%;
+    --popover: 0 0% 12%;
+    --popover-foreground: 0 0% 100%;
+
+    /* Borders / Inputs */
+    --border: 0 0% 20%;
+    --input: 0 0% 18%;
+    --ring: 0 100% 55%;
+
+    /* Alerts */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Design system vars */
+    --radius: 0.75rem;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary-light)), hsl(var(--primary)));
+    --gradient-hero: linear-gradient(135deg, hsl(var(--background)), hsl(var(--secondary)));
+    --gradient-subtle: linear-gradient(180deg, hsl(var(--background)), hsl(var(--muted)));
+
+    /* Shadows */
+    --shadow-card: 0 6px 20px rgba(0, 0, 0, 0.6);
+    --shadow-hero: 0 20px 50px rgba(0, 0, 0, 0.8);
+    --shadow-floating: 0 0 25px rgba(255, 59, 59, 0.3);
+
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  }
+
+  h1, h2, h3 {
+    font-family: 'Poppins', 'Inter', sans-serif;
+    font-weight: 700;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Components
+------------------------------------------------------------------- */
+@layer components {
+  /* Buttons */
+  .btn-primary {
+    @apply bg-primary text-primary-foreground rounded-full px-6 py-3 font-semibold shadow-floating transition hover:bg-primary-dark;
+  }
+  .btn-primary:hover { background-color: hsl(var(--primary-dark)); }
+
+  .btn-secondary {
+    @apply bg-white text-black rounded-full px-6 py-3 font-semibold shadow-md border border-border transition hover:bg-gray-200;
+  }
+  .btn-secondary:hover { @apply bg-gray-200; }
+
+  /* Cards */
+  .card {
+    @apply bg-card text-card-foreground rounded-xl shadow-card p-6 transition;
+  }
+
+  .service-card,
+  .fleet-card {
+    @apply bg-card text-card-foreground rounded-xl p-6 shadow-card border border-border transition-all;
+  }
+  .service-card:hover,
+  .fleet-card:hover {
+    @apply shadow-floating;
+    transform: translateY(-6px);
+  }
+
+  /* Hero Section */
+  .hero-section {
+    @apply relative min-h-screen flex items-center justify-center overflow-hidden;
+    background: var(--gradient-hero);
+    color: hsl(var(--primary-foreground));
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 10;
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 4rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .floating-element {
+    @apply transform-gpu;
+    animation: float 6s ease-in-out infinite;
+  }
+
+  /* Layout helpers */
+  .section-padding { padding-top: 4rem; padding-bottom: 4rem; }
+  @screen md { .section-padding { padding-top: 6rem; padding-bottom: 6rem; } }
+
+  .container-padding { padding-left: 1rem; padding-right: 1rem; }
+  @screen md { .container-padding { padding-left: 2rem; padding-right: 2rem; } }
+
+  .text-muted-foreground { color: hsl(var(--muted-foreground)); }
+}
+
+/* ------------------------------------------------------------------
+   Utilities
+------------------------------------------------------------------- */
+@layer utilities {
+  .text-responsive-xl { font-size: 1.75rem; line-height: 1.2; }
+  @media (min-width: 768px) { .text-responsive-xl { font-size: 2.5rem; } }
+  @media (min-width: 1024px) { .text-responsive-xl { font-size: 3.5rem; } }
+
+  .text-responsive-lg { font-size: 1.25rem; }
+  @media (min-width: 768px) { .text-responsive-lg { font-size: 1.75rem; } }
+  @media (min-width: 1024px) { .text-responsive-lg { font-size: 2.25rem; } }
+
+  .hover-lift:hover { transform: translateY(-6px); }
+}
+
+/* ------------------------------------------------------------------
+   Animations
+------------------------------------------------------------------- */
+@keyframes float {
+  0%,100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+/* ------------------------------------------------------------------
+   Additional Premium Animations for Loading Screen & Hero
+------------------------------------------------------------------- */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(-10px); }
+}
+
+@keyframes floatSoft {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.9; transform: scale(1.05); }
+}
+
+/* Reusable utility classes */
+.animate-fadeIn {
+  animation: fadeIn 0.8s ease-out forwards;
+}
+
+.animate-fadeOut {
+  animation: fadeOut 0.8s ease-in forwards;
+}
+
+.animate-fade-in-up {
+  animation: fadeIn 1.2s ease-in-out;
+}
+
+.animate-float {
+  animation: floatSoft 3s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: floatSoft 3s ease-in-out infinite 0.5s;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 2.5s ease-in-out infinite;
+}
+
+/* ------------------------------------------------------------------
+   React DatePicker Custom Dark Theme - Mhasla Wheels Style
+------------------------------------------------------------------- */
+
+.react-datepicker {
+  background-color: #0a0a0a !important;
+  border: 1px solid rgba(255, 59, 59, 0.2) !important;
+  color: #fff !important;
+  font-family: 'Inter', sans-serif;
+  box-shadow: 0 0 20px rgba(255, 0, 0, 0.1);
+  border-radius: 0.75rem !important; /* matches Tailwind rounded-xl */
+  overflow: hidden;
+}
+
+.react-datepicker__header {
+  background-color: #111 !important;
+  border-bottom: 1px solid rgba(255, 59, 59, 0.25) !important;
+  color: #fff !important;
+}
+
+.react-datepicker__current-month,
+.react-datepicker-time__header,
+.react-datepicker-year-header {
+  color: #fff !important;
+  font-weight: 600;
+}
+
+.react-datepicker__day-name,
+.react-datepicker__day,
+.react-datepicker__time-name {
+  color: #ccc !important;
+}
+
+.react-datepicker__day:hover,
+.react-datepicker__month-text:hover,
+.react-datepicker__year-text:hover {
+  background-color: rgba(255, 59, 59, 0.25) !important;
+  color: #fff !important;
+  border-radius: 6px;
+}
+
+.react-datepicker__day--selected,
+.react-datepicker__month-text--selected,
+.react-datepicker__time-list-item--selected {
+  background-color: #dc2626 !important; /* Tailwind red-600 */
+  color: #fff !important;
+  border-radius: 6px;
+}
+
+.react-datepicker__time-list {
+  background-color: #0a0a0a !important;
+  border-left: 1px solid rgba(255, 59, 59, 0.15);
+}
+
+.react-datepicker__time-list-item {
+  color: #ccc !important;
+  padding: 6px 0 !important;
+}
+
+.react-datepicker__time-list-item:hover {
+  background-color: rgba(255, 59, 59, 0.2) !important;
+  color: #fff !important;
+}
+
+.react-datepicker__triangle {
+  display: none;
+}
+
+.react-datepicker__input-container input {
+  background-color: #111 !important;
+  border: 1px solid #333 !important;
+  color: #fff !important;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+}
+
+.react-datepicker__input-container input:focus {
+  outline: none;
+  border-color: #dc2626 !important;
+  box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.4);
+}
+
+.react-datepicker__close-icon::after {
+  background-color: #dc2626 !important;
+  color: #fff !important;
+  font-weight: bold;
+}
+
+/* ------------------------------------------------------------------
+   Infused Logo Glow Animations (Hero Section)
+------------------------------------------------------------------- */
+@keyframes pulseSoft {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.05); }
+}
+
+@keyframes pulseHalo {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.9; transform: scale(1.07); }
+}
+
+.animate-pulse-soft {
+  animation: pulseSoft 3s ease-in-out infinite;
+}
+
+.animate-pulse-halo {
+  animation: pulseHalo 4s ease-in-out infinite;
+}
