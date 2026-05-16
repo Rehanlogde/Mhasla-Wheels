@@ -10,6 +10,7 @@ import { dirname, join } from "path";import * as vehiclenamegetting from "./func
    IMPORT FUNCTIONS
 ======================= */
 import * as Farecalculation from "./functions/Fare_calculation.js";
+import * as Appfarecalculation from "./Application/Fare-calculation.js";
 import * as Savingonetap from "./functions/onetapdatasaving.js"
 import * as adminLogin from "./functions/admin-login.js";
 import * as drivercreation from "./functions/create-driver.js"
@@ -63,6 +64,11 @@ import  * as Deletesuperuser from "./functions/deletesuperuser.js";
 import * as Superuserdata from "./functions/get-super-user-data-admin.js";
 import * as allowAdminAcess from "./functions/adminaccesstosuperuser.js";
 import * as getCredits from "./functions/get-credits.js";
+import * as appLogin from "./Application/login.js";
+import * as getVehiclesforapp from "./Application/fleet-data-get.js";
+import  * as Getvehiclebyid from "./Application/get-vehicles-by-id.js";
+import * as PlacenamesGet from "./Application/get-place-names.js";
+import * as Driverget from "./Application/Driver-get.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -201,9 +207,15 @@ app.get("/api/health", (_, res) => {
   res.json({ ok: true });
 });
 
-/* =======================
-   START SERVER
-======================= */
+//App services
+
+app.post("/app/api/login", wrap(appLogin))
+app.get("/app/api/fetch-vehicles", wrap(getVehiclesforapp))
+app.post("/app/api/get-vehicle-data", wrap(Getvehiclebyid))
+app.get("/app/api/get-places-names", wrap(PlacenamesGet))
+app.get("/app/api/fare-calculation", wrap(Appfarecalculation))
+app.get("/app/api/get-drivers", wrap(Driverget))
+
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
   console.log(`✅ API running on http://localhost:${PORT}`);

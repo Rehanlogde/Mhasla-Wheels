@@ -13,7 +13,7 @@ const Fleet = () => {
   const fetchVehicles = async () => {
     try {
       setLoading(true);
-      const res = await fetch("/api/functions/get-vehicles");
+      const res = await fetch("/api/functions/get-vehicles"); 
       const json = await res.json();
 
       if (!res.ok) {

@@ -105,9 +105,9 @@ const BookingModal = ({ isOpen, onClose }: BookingModalProps) => {
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-card rounded-2xl shadow-floating max-w-4xl w-full mx-4 animate-fade-in-up relative">
+      <div className="bg-card rounded-2xl shadow-floating max-w-4xl w-full mx-4 animate-fade-in-up relative max-h-[calc(100vh-2rem)] flex flex-col overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-border">
+        <div className="flex shrink-0 items-center justify-between p-6 border-b border-border">
           <h2 className="text-2xl font-semibold text-card-foreground">
             Book Your Ride
           </h2>
@@ -120,7 +120,7 @@ const BookingModal = ({ isOpen, onClose }: BookingModalProps) => {
         </div>
 
         {/* Content: Booking Form */}
-        <div className="p-6">
+        <div className="min-h-0 overflow-y-auto p-6">
           <BookingForm />
         </div>
       </div>

@@ -419,32 +419,6 @@ useEffect(() => {
 
 }, [vehicleid]);
 
-useEffect(()=>{
-validatecouponcode()
-}, [couponcode])
-const validatecouponcode = async () => {
-  const result = await fetch("/api/functions/couponcodeverification", {
-    headers : {
-      'Content-type' : 'application/json'
-    },
-    method : 'POST',
-    body : JSON.stringify({
-      couponcode
-    })
-  })
-  const finalresult  = await result.json()
-  if (finalresult.ok) {
-    var faredeductionamount = finalresult['deductionamount']
-    var previousfare = fare
-
-    setrate(previousfare-faredeductionamount)
-    console.log("Fare deducted successfully")
-  }
-
-  else{
-    toast.error(finalresult['message'])
-  }
-}
   useEffect(() => {
     if (!selectedVehicle) {
       setEstimatedFare(null);

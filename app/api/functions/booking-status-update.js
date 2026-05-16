@@ -167,24 +167,6 @@ Contact: ${driverContact}`
     `)
           break;
         case "Finished":
-          const loyaltyprogramquery1 = "select * from loyalty_program where useremail = $1"
-          const result = await pool.query(loyaltyprogramquery1, [emailid])
-          console.log("Entering the data in db")
-          
-            var randomnumber = Math.floor(Math.random() * 1000);
-            var uniquetoken = "mhasla_wheels-" + emailid.split("@")[0] + randomnumber
-            var finaldiscount = (5 / 100) * fare
-            console.log("final discount : ", finaldiscount)
-            const loyalityprogramquery2 = "INSERT INTO loyalty_program VALUES ($1,$2, $3)"
-            const result2 = await pool.query(loyalityprogramquery2, [uniquetoken, emailid, parseInt(finaldiscount)])
-            if (result2.rowCount > 0) {
-              console.log("Inserted !")
-            }
-            else {
-              console.log("Insertion failed")
-            }
-          
-
             //loyaly program destructing
             const dbquery = "UPDATE customers set mw_credits = mw_credits + $1 where email = $2"
             var creditstobeadded = (1/100) * fare

@@ -366,20 +366,7 @@ const Login = () => {
               >
                 <FaGoogle className="text-red-500" /> Continue with Google
               </Button>
-              <Button
-                type="button"
-                onClick={handleSocialLogin}
-                className="w-full flex items-center justify-center gap-2 py-2 bg-[#222] border border-red-800/30 rounded-full hover:bg-red-600/20 transition"
-              >
-                <FaFacebook className="text-blue-600" /> Continue with Facebook
-              </Button>
-              <Button
-                type="button"
-                onClick={handleSocialLogin}
-                className="w-full flex items-center justify-center gap-2 py-2 bg-[#222] border border-red-800/30 rounded-full hover:bg-red-600/20 transition"
-              >
-                <FaInstagram className="text-pink-500" /> Continue with Instagram
-              </Button>
+             
             </div>
 
             <p className="text-sm text-center mt-6 text-gray-400">

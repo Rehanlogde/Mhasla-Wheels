@@ -41,7 +41,7 @@
 
       // Fetch bookings for this customer
       fetchBookings(customer.id);
-      fetchLoyaltycoupondata();
+     
       fetchTotalCredits()
     }, [customer, authLoading, navigate]);
 
@@ -66,27 +66,7 @@
         toast.error(finalresult.message)
       }
     }
-    const fetchLoyaltycoupondata = async () => {
-      console.log("passing : ", customer.email)
-      const result = await fetch("/api/functions/get-coupon-code-data",{
-        headers: {
-          'Content-type' : 'application/json'
-        },
-        method : 'post',
-        body : JSON.stringify({
-          emailid : customer.email
-        })
-      })
-      const finalresponse = await result.json()
-      if (finalresponse.ok) {
-        setcoupondata(finalresponse.data)
-        console.log(finalresponse.data)
-        console.log("coupon : ", coupondata)
-      }
-      else{
-        alert(finalresponse['message'])
-      }
-    }
+   
     const fetchBookings = async (customer_id: string) => {
       setLoading(true);
       setFetchError(null);
@@ -239,24 +219,7 @@
               </div>
             )}
 
-            {/* Coupon Section */}
-        {coupondata && coupondata.length > 0 ? (
-    coupondata.map((coupon, index) => (
-      <div
-        key={index}
-        className="flex items-center justify-between bg-[#181818] border border-red-800/30 rounded-lg px-6 py-4 mb-4"
-      >
-        <span className="text-lg font-semibold text-gray-200">
-          {coupon.uniqueid}
-        </span>
-        <span className="text-lg font-bold text-green-400">
-          ₹{coupon.amount}
-        </span>
-      </div>
-    ))
-  ) : (
-    <div className="text-gray-400">No coupon available.</div>
-  )}
+        
 
             {/* Actions */}
             <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
