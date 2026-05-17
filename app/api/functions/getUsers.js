@@ -1,6 +1,7 @@
 import { pool } from "../db.js"
 
 export default async function getUserData(req,res) {
+    try{
     const dbquery = "select * from customers"
 
     const dbresult = await pool.query(dbquery)
@@ -17,4 +18,11 @@ console.log("these are the rows : ", dbresult.rows)
             message : "Db issue"
         })
     }
+}catch(e)
+{
+    return res.json({
+        ok  :false,
+        message : "Internal server error"
+    })
+}
 }

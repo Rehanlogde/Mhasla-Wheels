@@ -1,6 +1,7 @@
 import { pool } from "../db.js"
 
 export default async function Getsuperuserdata(req,res) {
+    try{
     var dbquery = "select * from superuser"
     const result = await pool.query(dbquery)
 
@@ -17,5 +18,13 @@ export default async function Getsuperuserdata(req,res) {
             ok : false,
             message : "unable to get the super user with the name 'Asim' !"
         });
+    }
+    }
+    catch(E)
+    {
+        return res.json({
+            ok : false,
+            message : "Internal server error"
+        })
     }
 }

@@ -7,8 +7,8 @@ export default async function Farecalculation(req, res) {
   var dbquery =
     "SELECT one_way_rate, perseatrate from Fares where source = $1 AND destination = $2 AND capacity =$3";
   const result = await pool.query(dbquery, [
-    source.toLowerCase(),
-    destination.toLowerCase(),
+    source,
+    destination,
     capacity,
   ]);
   if (result.rowCount > 0) {
@@ -31,8 +31,8 @@ export default async function Farecalculation(req, res) {
     var dbquery =
       "SELECT one_way_rate, perseatrate from Fares where source = $1 AND destination = $2 AND capacity = $3";
     const result2 = await pool.query(dbquery, [
-      destination.toLowerCase(),
-      source.toLowerCase(),
+      destination,
+      source,
       capacity,
     ]);
     if (result2.rowCount > 0) {

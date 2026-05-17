@@ -3,6 +3,7 @@ import { pool } from "../db.js";
 import { sendmail, sendmailtoadmin } from "./mailfunctions.js";
 
 export default async function Changedriver(req, res) {
+    try{
     const { bookingdata , driverselected} = req.body;
     console.log("data received : ", bookingdata, driverselected);
     // Update drivername and driverid for booking
@@ -57,4 +58,12 @@ else{
         message : 'Big server issue'
     })
 }
+    }
+    catch(e)
+    {
+        return res.status(500).json({
+            ok :false, 
+            message : "Internal server error"
+        })
+    }
 }

@@ -30,7 +30,7 @@ import Adddriverelement from "./pages/Add_driver";
 import Map from "./pages/mapview"
 import Addvehicles from "./pages/Add_vehicles";
 import Showdriver from "./pages/Drivers_showing";
-
+import FaresAdmin from "./pages/Fares-admin"
 import Scanner from "./components/Scanner";
 // ✅ Customer pages
 import Login from "./pages/Login";
@@ -107,7 +107,7 @@ const App = () => {
               <Route path="/admin" element={<AdminLayout />}>
                 <Route path="bookings" element={<AdminBookings />} />
                 <Route path="loyaltyProgram" element= {<LoyaltyProgram />}/>
-                
+                <Route path="Fares-list" element = {<FaresAdmin />}/>
                 <Route path="fleet" element={<AdminFleet />} />
                 <Route  path="getusers" element ={<UserrInformation />}/>
                 <Route path="settings" element= {<AdminSettings />} />

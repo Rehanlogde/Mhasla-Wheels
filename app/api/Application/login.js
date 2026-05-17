@@ -14,7 +14,7 @@ export async function appLogin(event) {
     try {
         console.log("Verifying the login from application")
         const { email, password } = JSON.parse(event.body || "{}");
-
+console.log(email, password)
         if (!email || !password) {
             return {
                 statusCode: 400,

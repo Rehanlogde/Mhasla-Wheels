@@ -21,8 +21,10 @@ const navItems = [
     { label: "Map View", path: "/mapview" },
     { label: 'Show current Drivers', path: "/admin/showdrivers" },
     { label: 'Mail', path: "/admin/mailsomeone" },
-    {label  : "Loyalty_program", path : "/admin/loyaltyProgram"},
-    {label : "Users", path : "/admin/getusers"}
+  //  {label  : "Loyalty_program", path : "/admin/loyaltyProgram"},
+    {label : "Users", path : "/admin/getusers"},
+    {label : "Fares list", path : "/admin/Fares-list"}
+    
 ];
 
 export default function AdminLayout() {

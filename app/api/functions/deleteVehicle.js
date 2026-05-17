@@ -1,6 +1,7 @@
 import { pool } from "../db.js"
 
 export default async function deleteFunction(req,res) {
+    try{
     const vehicleid = req.body.vehicleid
 
     console.log("vehicle id recieved  : ", vehicleid)
@@ -22,4 +23,12 @@ export default async function deleteFunction(req,res) {
             message  : 'DB ISSUE'
         })
     }
+}
+catch(e)
+{
+    return res.json({
+        ok :false, 
+        message : "Internal server error"
+    })
+}
 }

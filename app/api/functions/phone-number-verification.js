@@ -1,6 +1,7 @@
 import { pool } from "../db.js"
 
 export default async function Phonenumberverification(req,res) {
+    try{
     const {useremail, code} = req.body
 
     const dbquery = "SELECT * from phonenumberverification where useremail = $1 AND code =$2"
@@ -32,4 +33,12 @@ export default async function Phonenumberverification(req,res) {
             message : "Phone number verification failed"
         })
     }
+}
+catch(e)
+{
+    return res.json({
+        ok : false,
+        message : "Internal server error"
+    })
+}
 }

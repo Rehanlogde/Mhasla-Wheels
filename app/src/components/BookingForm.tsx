@@ -619,8 +619,8 @@ setiscreditused(true)
 
           <option value="">Select Pickup Location</option>
           {placenames.sort().map((loc) => (
-            <option key={loc.placename} value={loc.placename}>
-              {loc.placename}
+            <option key={loc} value={loc}>
+              {loc}
             </option>
             
           ))}
@@ -636,9 +636,9 @@ setiscreditused(true)
         >
           <option value="">Select Drop Location</option>
           {placenames.sort().map((loc) => (
-            (loc.placename != formData.from)?
-            <option key={loc.placename} value={loc.placename}>
-              {loc.placename}
+            (loc != formData.from)?
+            <option key={loc} value={loc}>
+              {loc}
             </option> : null
           ))}
         </select>
