@@ -17,6 +17,7 @@ import * as drivercreation from "./functions/create-driver.js"
 import * as customerLogin from "./functions/customer-login.js";
 import * as customerRegister from "./functions/customer-register.js";
 import * as createBooking from "./functions/create-booking.js";
+import * as createbookingapp from "./Application/Submit-booking.js";
 import * as createFeedback from "./functions/create-feedback.js";
 import * as createVehicle from "./functions/create-vehicle.js";
 import * as deleteVehicle from "./functions/deleteVehicle.js";
@@ -70,6 +71,7 @@ import  * as Getvehiclebyid from "./Application/get-vehicles-by-id.js";
 import * as PlacenamesGet from "./Application/get-place-names.js";
 import * as Driverget from "./Application/Driver-get.js";
 import { CreateFare, DeleteFares, GetFares, UpdateFare } from "./functions/CRUD_for_fares.js";
+import * as getCreditsapp from "./Application/get-credits.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -220,6 +222,8 @@ app.post("/app/api/get-vehicle-data", wrap(Getvehiclebyid))
 app.get("/app/api/get-places-names", wrap(PlacenamesGet))
 app.get("/app/api/fare-calculation", wrap(Appfarecalculation))
 app.get("/app/api/get-drivers", wrap(Driverget))
+app.post("/app/api/create-booking", wrap(createbookingapp))
+app.post("/app/api/getusercredits", wrap(getCreditsapp))
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {

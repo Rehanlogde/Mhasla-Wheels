@@ -2,8 +2,8 @@
 import { pool } from "../db.js";
 import { v4 as uuidv4 } from "uuid";
 import sgMail from "@sendgrid/mail";
-import * as mailfunctions from "./mailfunctions.js";
-  import * as whatsappmessagesending from "./whatsappops.js"
+import * as mailfunctions from "../functions/mailfunctions.js";
+//  import * as whatsappmessagesending from "../functions/whatsappops.js"
 if (process.env.SENDGRID_API_KEY) {
   sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 }
@@ -157,7 +157,7 @@ export async function handler(event) {
       else{
         console.log("is creditused is false")
       }
-    await whatsappmessagesending.sendsmsmessage("Booking done")
+   // await whatsappmessagesending.sendsmsmessage("Booking done")
     await mailfunctions.sendmail("Booking Confirmed", safeEmail, `
       <p>Hi <strong>${safeName}</strong>,</p>
       <p>Your booking has been successfully created! Here are your details:</p>
