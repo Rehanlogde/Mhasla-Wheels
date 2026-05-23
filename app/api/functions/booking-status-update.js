@@ -11,6 +11,8 @@ export default async function updatingbookingandcarstatus(req, res) {
     const { bookingid, status, vehicleid, emailid, pickup, destination, vehiclename, driverid, fare } = req.body
 
     console.log("got the data : ", bookingid, status, vehicleid)
+if (status!="Rejected") {
+  
 
     var query = "select * from drivers where id = $1"
     console.log("This is the driverid : ", driverid)
@@ -19,8 +21,10 @@ export default async function updatingbookingandcarstatus(req, res) {
     const driverName = result1.rows[0]?.name || "-";
     console.log(driverName)
     const driverContact = result1.rows[0]?.contact_number || "-";
+}
     const dbquery = "UPDATE bookings set status = $1 where booking_code = $2"
     const result = await pool.query(dbquery, [status, bookingid])
+
     if (result.rowCount >= 1) {
       var dbquery2
 
@@ -247,8 +251,6 @@ ID:${bookingid}
 Vehicle:${vehiclename || "-"}
 Pickup:${pickup || "-"}
 Drop:${destination || "-"}
-Driver:${driverName || "-"}
-Contact:${driverContact || "-"}
 Status:Rejected`
           ); await sendmail("Booking Update ❌", emailid, `
       <p>Hi there,</p>
@@ -258,8 +260,6 @@ Status:Rejected`
         <tr><td style="padding:8px 12px;border-bottom:1px solid #2a2a2a;color:#dc2626;font-weight:600;">Vehicle</td><td style="padding:8px 12px;border-bottom:1px solid #2a2a2a;">${vehiclename || "-"}</td></tr>
         <tr><td style="padding:8px 12px;border-bottom:1px solid #2a2a2a;color:#dc2626;font-weight:600;">Pickup</td><td style="padding:8px 12px;border-bottom:1px solid #2a2a2a;">${pickup || "-"}</td></tr>
         <tr><td style="padding:8px 12px;border-bottom:1px solid #2a2a2a;color:#dc2626;font-weight:600;">Destination</td><td style="padding:8px 12px;border-bottom:1px solid #2a2a2a;">${destination || "-"}</td></tr>
-        <tr><td style="padding:8px 12px;border-bottom:1px solid #2a2a2a;color:#dc2626;font-weight:600;">Driver Name</td><td style="padding:8px 12px;border-bottom:1px solid #2a2a2a;">${driverName}</td></tr>
-        <tr><td style="padding:8px 12px;border-bottom:1px solid #2a2a2a;color:#dc2626;font-weight:600;">Driver Contact</td><td style="padding:8px 12px;border-bottom:1px solid #2a2a2a;">${driverContact}</td></tr>
         <tr><td style="padding:8px 12px;color:#dc2626;font-weight:600;">Status</td><td style="padding:8px 12px;color:#ef4444;font-weight:700;">❌ Rejected</td></tr>
       </table>
       <p style="margin-top:20px;color:#d4d4d4;">This could be due to vehicle unavailability or scheduling conflicts. But don't worry — we've got plenty of rides waiting for you!</p>

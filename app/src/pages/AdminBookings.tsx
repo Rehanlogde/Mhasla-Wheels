@@ -322,7 +322,7 @@ export default function AdminBookings() {
                     <td
                       className={`p-3 border-b border-gray-800 font-semibold capitalize ${b.status === "pending"
                         ? "text-yellow-400"
-                        : b.status === "confirmed"
+                        : b.status === "Confirmed"
                           ? "text-green-400"
                           : b.status === "rejected"
                             ? "text-red-500"
@@ -352,7 +352,12 @@ export default function AdminBookings() {
                         onClick={() =>{
                           if (b.drivername !=null) {
                             
-                            confirmBooking(b.booking_code)}
+                            confirmBooking(b.booking_code)
+                            bookingstateupdate = "Confirmed"
+                            vehicleidofbooking = b.vehicle_id
+                             updatestatusofbooking(b.booking_code, b.pickup_location, b.drop_location, b.vehiclename, b.email, b.driverid, b.fare)  
+                  
+                          }
                           else{
                             toast.error("Please first selectt driver before proceeding.")
                           }}
@@ -364,8 +369,18 @@ export default function AdminBookings() {
                       <Button
                         size="sm"
                         variant="destructive"
-                        onClick={() => rejectBooking(b.booking_code)}
-                      >
+                        onClick={() =>
+                          
+                          {
+
+                          rejectBooking(b.booking_code)                          
+                            bookingstateupdate = "Rejected"
+                            vehicleidofbooking = b.vehicle_id
+                             updatestatusofbooking(b.booking_code, b.pickup_location, b.drop_location, b.vehiclename, b.email, b.driverid, b.fare)  
+                  
+                        }
+                      }
+                          >
                         Reject
                       </Button>
                       </div>
