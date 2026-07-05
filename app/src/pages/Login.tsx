@@ -217,12 +217,12 @@ import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-
-  import { useGoogleLogin } from '@react-oauth/google';
+import LoadingScreen from "@/components/LoadingScreen";
+import { useGoogleLogin } from '@react-oauth/google';
 import { FaGoogle, FaFacebook, FaInstagram } from "react-icons/fa";
 
 const Login = () => {
-  const { login, customer } = useAuth();
+  const { login, customer, setSession } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
@@ -266,20 +266,71 @@ const Login = () => {
 
 
   const loginwithgoogle = useGoogleLogin({
-    onSuccess: async (tokenResponse) =>{ console.log(tokenResponse)
-      const res = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
-      headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
-    });
+    onSuccess: async (tokenResponse) => {
+      setError(null);
+      setLoading(true);
 
-    const userobj = await res.json();
-    console.log("User object received:", userobj['email']);
+      try {
+        console.log(tokenResponse);
+        const res = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+          headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
+        });
 
-    console.log("loggin u in....")
-    setEmail(userobj['email'])
-    const passwordgoogle  = 'googleuser'
-    setPassword(passwordgoogle)
+        const userobj = await res.json();
+        console.log("User object received:", userobj["email"]);
+
+        const passwordgoogle = "googleuser";
+        let result = await login(userobj["email"], passwordgoogle);
+
+        if (result.error) {
+          const savingdataresponse = await fetch(
+            "/api/functions/savingtheonetapsignupdata",
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+              method: "POST",
+              body: JSON.stringify({
+                userdata: userobj,
+              }),
+            }
+          );
+
+          const finalresponse = await savingdataresponse.json();
+
+          if (
+            savingdataresponse.ok &&
+            finalresponse["status"] &&
+            finalresponse["token"] &&
+            finalresponse["customer"]
+          ) {
+            setSession(finalresponse["token"], finalresponse["customer"]);
+            const safeDest = redirectTo.startsWith("/login") ? "/profile" : redirectTo;
+            navigate(safeDest);
+            return;
+          }
+
+          result = await login(userobj["email"], passwordgoogle);
+        }
+
+        if (result.error) {
+          setError(result.error);
+          return;
+        }
+
+        const safeDest = redirectTo.startsWith("/login") ? "/profile" : redirectTo;
+        navigate(safeDest);
+      } catch (err: any) {
+        setError(err.message || "Google login failed");
+      } finally {
+        setLoading(false);
+      }
     },
-    onError :  ()=>console.log("error occurred !!!")
+    onError: () => {
+      console.log("error occurred !!!");
+      setError("Google login failed");
+      setLoading(false);
+    }
   });  // Social login placeholder
   const handleSocialLogin = () => {
     setError("❌ Social login is temporarily unavailable.");
@@ -361,7 +412,8 @@ const Login = () => {
             <div className="space-y-3">
               <Button
                 type="button"
-                onClick={()=> loginwithgoogle()}
+                onClick={() => loginwithgoogle()}
+                disabled={loading}
                 className="w-full flex items-center justify-center gap-2 py-2 bg-[#222] border border-red-800/30 rounded-full hover:bg-red-600/20 transition"
               >
                 <FaGoogle className="text-red-500" /> Continue with Google
@@ -383,6 +435,7 @@ const Login = () => {
       </section>
 
       <Footer />
+      {loading && <LoadingScreen onLoadingComplete={() => setLoading(false)} />}
     </div>
   );
 };
