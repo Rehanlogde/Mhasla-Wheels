@@ -72,6 +72,7 @@ import * as PlacenamesGet from "./Application/get-place-names.js";
 import * as Driverget from "./Application/Driver-get.js";
 import { CreateFare, DeleteFares, GetFares, UpdateFare } from "./functions/CRUD_for_fares.js";
 import * as getCreditsapp from "./Application/get-credits.js";
+import  addmetadata from "./functions/add_metadata.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -193,6 +194,8 @@ app.get("/api/functions/get-fares-admin", GetFares)
 app.post("/api/functions/insert-new-fare", CreateFare)
 app.put("/api/functions/update-fare", UpdateFare)
 app.delete("/api/functions/delete-fare", DeleteFares)
+
+app.put("/api/functions/updatemetadata", addmetadata)
 
 app.get("/api/functions/getsuperuserdataforadmin", wrap(Superuserdata))
 app.all("/api/functions/deletesuperuser", wrap(Deletesuperuser))
