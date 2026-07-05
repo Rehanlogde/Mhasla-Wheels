@@ -133,6 +133,7 @@ interface AuthContextType {
   ) => Promise<{ error?: string }>;
   logout: () => void;
   refreshUser: () => Promise<void>;
+  setSession: (token: string, customer: Customer) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -161,6 +162,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   // Customer login
+  const setSession = (sessionToken: string, sessionCustomer: Customer) => {
+    localStorage.setItem("CUSTOMER_TOKEN", sessionToken);
+    localStorage.setItem("CUSTOMER_DATA", JSON.stringify(sessionCustomer));
+    setToken(sessionToken);
+    setCustomer(sessionCustomer);
+  };
+
   const login = async (email: string, password: string) => {
     try {
       const res = await fetch("/api/functions/customer-login", {
@@ -176,10 +184,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       }
 
       // Store token and customer data
-      localStorage.setItem("CUSTOMER_TOKEN", json.token);
-      localStorage.setItem("CUSTOMER_DATA", JSON.stringify(json.customer));
-      setToken(json.token);
-      setCustomer(json.customer);
+      setSession(json.token, json.customer);
 
       return {};
     } catch (err: any) {
@@ -236,7 +241,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ customer, token, loading, login, register, logout, refreshUser }}
+      value={{ customer, token, loading, login, register, logout, refreshUser, setSession }}
     >
       {children}
     </AuthContext.Provider>
@@ -248,4 +253,3 @@ export const useAuth = () => {
   if (!ctx) throw new Error("useAuth must be used within AuthProvider");
   return ctx;
 };
-

@@ -251,10 +251,9 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { FaGoogle, FaFacebook, FaInstagram } from "react-icons/fa";
 import { useGoogleLogin } from "@react-oauth/google";
-import { jwtDecode } from "jwt-decode";
 import LoadingScreen from "@/components/LoadingScreen";
 const Register = () => {
-  const { register } = useAuth();
+  const { register, setSession } = useAuth();
   const navigate = useNavigate();
   const [name, setName] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
@@ -266,42 +265,51 @@ const Register = () => {
   const [verificationCode, setVerificationCode] = useState("");
   const [codeError, setCodeError] = useState("");
   const [verifying, setVerifying] = useState(false);
-  const login = useGoogleLogin({
+  const googleRegister = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
-      console.log(tokenResponse);
-      const res = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
-        headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
-      });
+      setLoading(true);
 
-      const userobj = await res.json();
-      console.log("User object received:", userobj["email"]);
+      try {
+        console.log(tokenResponse);
+        const res = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+          headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
+        });
 
-      const savingdataresponse = await fetch(
-        "/api/functions/savingtheonetapsignupdata",
-        {
-          headers: {
-            "Content-Type": "application/json",
+        const userobj = await res.json();
+        console.log("User object received:", userobj["email"]);
+
+        const savingdataresponse = await fetch(
+          "/api/functions/savingtheonetapsignupdata",
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+            method: "POST",
+            body: JSON.stringify({
+              userdata: userobj,
+            }),
           },
-          method: "POST",
-          body: JSON.stringify({
-            userdata: userobj,
-          }),
-        },
-      );
-      const finalresponse = await savingdataresponse.json();
-
-      if (finalresponse["status"]) {
-        console.log(
-          "hey...registered through google is done in a fantastic manner !!!",
         );
-        toast.success("registration done !!!");
-        navigate("/login");
-      } else {
-        toast.error("Registration failed.....");
-        console.log();
+        const finalresponse = await savingdataresponse.json();
+
+        if (savingdataresponse.ok && finalresponse["status"] && finalresponse["token"] && finalresponse["customer"]) {
+          setSession(finalresponse["token"], finalresponse["customer"]);
+          toast.success(finalresponse["message"] || "Registration done!");
+          navigate("/profile");
+          return;
+        }
+
+        toast.error(finalresponse["message"] || "Registration failed.....");
+        setLoading(false);
+      } catch (error) {
+        toast.error("Google registration failed. Please try again.");
+        setLoading(false);
       }
     },
-    onError: () => console.log("error occurred !!!"),
+    onError: () => {
+      console.log("error occurred !!!");
+      setLoading(false);
+    },
   });
   const sendVerificationCode = async (emailid: string) => {
     const result = await fetch("/api/functions/emailcodesending", {
@@ -521,7 +529,8 @@ const Register = () => {
             <div className="space-y-3">
               <Button
                 type="button"
-                onClick={() => login()}
+                onClick={() => googleRegister()}
+                disabled={loading}
                 className="w-full flex items-center justify-center gap-2 py-2 bg-[#222] border border-red-800/30 rounded-full hover:bg-red-600/20 transition"
               >
                 <FaGoogle className="text-red-500" /> Continue with Google
