@@ -237,6 +237,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Helmet } from "react-helmet";
+import { toast } from "sonner";
 
 interface MetaData {
   site_title?: string;
@@ -244,6 +245,7 @@ interface MetaData {
   meta_keywords?: string;
   og_image_url?: string;
 }
+
 
 const About = () => {
   const [meta, setMeta] = useState<MetaData | null>(null);
@@ -271,9 +273,70 @@ const About = () => {
   };
 
   useEffect(() => {
-    fetchMeta();
+   // fetchMeta();
+   console.log(
+    "calling api"
+   );
+    getaboutus()
+    getourstory()
+    getourmission()
   }, []);
 
+  const [aboutus, setaboutus] = useState("")
+   const [ourstory, setourstory] = useState("")
+    const [ourmission ,setourmission] = useState("")
+   const getaboutus = async () => {
+        const response = await fetch("/api/functions/getmetadata/about_us", {
+          headers : {
+            'content-type' : 'application/json'
+          },
+          method : 'GET'
+        })
+          if(response.status == 200){
+        const finalresponse = await  response.json()
+            setaboutus(finalresponse['data'])
+      }
+      else{
+        const finalresponse = await response.json()
+        toast.error(finalresponse['message'])
+      }
+  }
+
+  const getourstory = async () => {
+        const response = await fetch("/api/functions/getmetadata/our_story", {
+          headers : {
+            'content-type' : 'application/json'
+          },
+          method : 'GET'
+        })
+          if(response.status == 200){
+        const finalresponse = await  response.json()
+            setourstory(finalresponse['data'])
+      }
+      else{
+        const finalresponse = await response.json()
+        toast.error(finalresponse['message'])
+      }
+  }
+
+
+  const getourmission = async () => {
+        const response = await fetch("/api/functions/getmetadata/our_mission", {
+          headers : {
+            'content-type' : 'application/json'
+          },
+          method : 'GET'
+        })
+          if(response.status == 200){
+        const finalresponse = await  response.json()
+            setourmission(finalresponse['data'])
+      }
+      else{
+        const finalresponse = await response.json()
+        toast.error(finalresponse['message'])
+      }
+  }
+  
   const values = [
     {
       icon: Car,
@@ -349,6 +412,9 @@ const About = () => {
             About <span className="text-red-500">Mhasla Wheels</span>
           </h1>
           <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto">
+         {aboutus}
+          </p>
+          <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto">
             Your trusted transportation partner since 2020 — delivering comfort,
             reliability, and trust on every road.
           </p>
@@ -371,7 +437,8 @@ const About = () => {
             <h2 className="text-3xl md:text-4xl font-bold text-white">
               Our Story
             </h2>
-            <p className="text-gray-400">
+            {/*
+              <p className="text-gray-400">
               Founded in 2020 by passionate locals who understood Mhasla’s
               transportation challenges, Mhasla Wheels began as a humble fleet
               of just three vehicles.
@@ -384,6 +451,10 @@ const About = () => {
               Today, Mhasla Wheels continues to support local drivers and drive
               the future of transportation — one ride at a time.
             </p>
+              */} 
+              <p className="text-gray-400">
+                {ourstory}
+              </p>
           </div>
 
           <div className="flex justify-center">
@@ -400,10 +471,17 @@ const About = () => {
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
             Our Mission
           </h2>
+          
+      {/*  
           <p className="text-lg text-gray-300">
             To provide safe, reliable, and comfortable transportation solutions
             that connect the people of Mhasla while empowering our community.
           </p>
+          */}
+          <p className="text-lg text-gray-300">
+              {ourmission}
+        </p>
+          
         </div>
       </section>
 

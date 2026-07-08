@@ -234,13 +234,13 @@ import {
   Phone,
   Mail,
   MapPin,
-  MessageCircle,
   Facebook,
   Instagram,
   Twitter,
   Linkedin,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { FaWhatsapp } from "react-icons/fa";
+import { toast } from "sonner";
 
 interface Settings {
   phone?: string;
@@ -256,7 +256,8 @@ interface Settings {
 const Footer = () => {
   const [settings, setSettings] = useState<Settings>({});
   const [loading, setLoading] = useState(true);
-
+  const [contactnumber, setcontactnumber] = useState("");
+  const [emailid, setemailid] = useState("");
   const quickLinks = [
     { name: "About Us", path: "/about" },
     { name: "Services", path: "/services" },
@@ -266,6 +267,38 @@ const Footer = () => {
   ];
 
   const currentYear = new Date().getFullYear();
+
+  const getcontactnumber = async () => {
+    const response = await fetch("/api/functions/getmetadata/phone_number", {
+      headers: {
+        "content-type": "application/json",
+      },
+      method: "GET",
+    });
+
+    if (response.status === 200) {
+      const finalresponse = await response.json();
+      setcontactnumber(String(finalresponse.data ?? ""));
+    } else {
+      toast.error("Failed to load contact number");
+    }
+  };
+
+  const getemail = async () => {
+    const response = await fetch("/api/functions/getmetadata/emailid", {
+      headers: {
+        "content-type": "application/json",
+      },
+      method: "GET",
+    });
+
+    if (response.status === 200) {
+      const finalresponse = await response.json();
+      setemailid(String(finalresponse.data ?? ""));
+    } else {
+      toast.error("Failed to load email");
+    }
+  };
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -285,7 +318,15 @@ const Footer = () => {
     };
 
     fetchSettings();
+    getcontactnumber();
+    getemail();
   }, []);
+
+  const normalizedContactNumber = contactnumber.replace(/[^\d+]/g, "");
+  const whatsappLink = normalizedContactNumber
+    ? `https://wa.me/${normalizedContactNumber.replace(/^\+/, "")}`
+    : settings.whatsapp_link;
+  const emailLink = emailid ? `mailto:${emailid}` : "";
 
   if (loading) {
     return (
@@ -341,13 +382,29 @@ const Footer = () => {
           <div>
             <h3 className="text-xl font-semibold mb-4">Get in Touch</h3>
 
-            {settings.whatsapp_link && (
-              <a href={settings.whatsapp_link} target="_blank" rel="noopener noreferrer">
-                <Button className="w-full flex gap-2">
-                  <MessageCircle size={18} /> WhatsApp Chat
-                </Button>
-              </a>
-            )}
+            <div className="space-y-3">
+              {contactnumber && whatsappLink && (
+                <a
+                  href={whatsappLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 hover:text-red-400 transition-colors"
+                >
+                  <FaWhatsapp size={18} />
+                  <span>+91 {contactnumber}</span>
+                </a>
+              )}
+
+              {emailid && emailLink && (
+                <a
+                  href={emailLink}
+                  className="flex items-center gap-3 hover:text-red-400 transition-colors"
+                >
+                  <Mail size={18} />
+                  <span>{emailid}</span>
+                </a>
+              )}
+            </div>
           </div>
         </div>
 

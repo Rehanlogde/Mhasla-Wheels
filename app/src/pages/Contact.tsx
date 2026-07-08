@@ -315,6 +315,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
 
 interface Settings {
   phone?: string;
@@ -327,11 +328,66 @@ const Contact = () => {
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [settings, setSettings] = useState<Settings>({});
   const [loading, setLoading] = useState(true);
+  const [contactnumber, setcontactnumber] = useState("");
+  const [emailid, setemailid] = useState("");
+  const [address, setaddress] = useState("");
+
+
+  const getcontactnumber = async () => {
+    const response = await fetch("/api/functions/getmetadata/phone_number", {
+      headers: {
+        "content-type": "application/json",
+      },
+      method: "GET",
+    });
+
+    if (response.status === 200) {
+      const finalresponse = await response.json();
+      setcontactnumber(String(finalresponse.data ?? ""));
+    } else {
+      toast.error("Failed to load contact number");
+    }
+  };
+
+  const getaddress = async () => {
+    const response = await fetch("/api/functions/getmetadata/address", {
+      headers: {
+        "content-type": "application/json",
+      },
+      method: "GET",
+    });
+
+    if (response.status === 200) {
+      const finalresponse = await response.json();
+      setaddress(String(finalresponse.data ?? ""));
+    } else {
+      toast.error("Failed to load address");
+    }
+  };
+
+  const getemailid = async () => {
+    const response = await fetch("/api/functions/getmetadata/emailid", {
+      headers: {
+        "content-type": "application/json",
+      },
+      method: "GET",
+    });
+
+    if (response.status === 200) {
+      const finalresponse = await response.json();
+      setemailid(String(finalresponse.data ?? ""));
+    } else {
+      toast.error("Failed to load email");
+    }
+  };
 
   // ✅ Fetch settings from LOCAL backend (not Supabase)
   useEffect(() => {
     const fetchSettings = async () => {
       try {
+        getemailid()
+        getcontactnumber()
+        getaddress()
         const res = await fetch("/api/functions/get-settings");
         const json = await res.json();
         if (res.ok) {
@@ -348,6 +404,16 @@ const Contact = () => {
 
     fetchSettings();
   }, []);
+
+  const normalizedPhone = contactnumber.replace(/[^\d+]/g, "");
+  const phoneLink = normalizedPhone ? `tel:${normalizedPhone}` : null;
+  const whatsappLink = normalizedPhone
+    ? `https://wa.me/${normalizedPhone.replace(/^\+/, "")}`
+    : null;
+  const emailLink = emailid ? `mailto:${emailid}` : null;
+  const addressLink = address
+    ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`
+    : null;
 
   const businessHours = [
     { day: "Monday - Friday", hours: "8:00 AM - 10:00 PM" },
@@ -368,36 +434,36 @@ const Contact = () => {
     {
       icon: Phone,
       title: "Phone",
-      content: settings.phone || "N/A",
+      content: `+91${contactnumber}` || "N/A",
       description: "Call us anytime for immediate assistance",
-      action: settings.phone ? `tel:${settings.phone}` : null,
+      action: phoneLink,
     },
     {
       icon: Mail,
       title: "Email",
-      content: settings.email || "N/A",
+      content: emailid || "N/A",
       description: "Send us your queries and feedback",
-      action: settings.email ? `mailto:${settings.email}` : null,
+      action: emailLink,
     },
     {
       icon: MessageCircle,
       title: "WhatsApp",
-      content: "Chat with us",
+      content: `+91${contactnumber}` || "Chat with us",
       description: "Quick response via WhatsApp",
-      action: settings.whatsapp_link || null,
+      action: whatsappLink,
     },
     {
       icon: MapPin,
       title: "Address",
-      content: settings.address || "Mhasla, India",
+      content: address || "Mhasla, India",
       description: "Visit our office for in-person assistance",
-      action: null,
+      action: addressLink,
     },
   ];
 
   return (
     <div className="min-h-screen bg-[#121212] text-white">
-      <Header onBookRide={() => setIsBookingModalOpen(true)} />
+      <Header />
 
       {/* Hero */}
       <section className="pt-24 md:pt-32 pb-16 bg-[#181818] text-center border-b border-red-800/20">
@@ -469,16 +535,16 @@ const Contact = () => {
           </h2>
 
           <div className="flex justify-center gap-4">
-            {settings.phone && (
-              <a href={`tel:${settings.phone}`}>
+            {phoneLink && (
+              <a href={phoneLink}>
                 <Button className="bg-red-600 hover:bg-red-700">
                   <Phone size={18} className="mr-2" /> Call Now
                 </Button>
               </a>
             )}
-            {settings.whatsapp_link && (
+            {whatsappLink && (
               <a
-                href={`${settings.whatsapp_link}?text=Emergency%20ride`}
+                href={`${whatsappLink}?text=Emergency%20ride`}
                 target="_blank"
                 rel="noopener noreferrer"
               >

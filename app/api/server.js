@@ -73,6 +73,7 @@ import * as Driverget from "./Application/Driver-get.js";
 import { CreateFare, DeleteFares, GetFares, UpdateFare } from "./functions/CRUD_for_fares.js";
 import * as getCreditsapp from "./Application/get-credits.js";
 import  addmetadata from "./functions/add_metadata.js";
+import Getmetadata from "./functions/get_metadata.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -196,7 +197,7 @@ app.put("/api/functions/update-fare", UpdateFare)
 app.delete("/api/functions/delete-fare", DeleteFares)
 
 app.put("/api/functions/updatemetadata", addmetadata)
-
+app.get("/api/functions/getmetadata/:name", Getmetadata)
 app.get("/api/functions/getsuperuserdataforadmin", wrap(Superuserdata))
 app.all("/api/functions/deletesuperuser", wrap(Deletesuperuser))
 // File upload endpoint with multer (Express-style, not wrapped)

@@ -1,19 +1,21 @@
-import { pool } from "../db"
+import { WhatsappAuthentication } from "twilio/lib/rest/content/v1/content.js"
+import { pool } from "../db.js"
 
 export default async function Getmetadata(req,res) {
 try{
-    const whattoget = req.name
+    const whattoget = req.params.name
 
-    const query = "SELECT $1 from metadata_data"
+    const query = `SELECT ${whattoget} from metadata_data`
     
-    const result = await pool.query(query, [whattoget])
+    const result = await pool.query(query)
 
     if (result.rowCount > 0) {
         
+        console.log(result.rows)
         return res.status(200).json({
             ok : true,
             message : "Got the data",
-            data : result[0][0]
+            data : result.rows[0][whattoget]
         })
     }
     else{

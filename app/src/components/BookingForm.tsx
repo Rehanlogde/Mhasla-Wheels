@@ -10,7 +10,6 @@ import "react-datepicker/dist/react-datepicker.css";
 import {toast} from 'sonner';
 import { i, p, P } from "node_modules/framer-motion/dist/types.d-BJcRxCew";
 import PhoneNumberEntry from "./PhoneNumberEntry";
-import PhoneCodeEntry from "./PhoneCodeEntry";
 
 type Vehicle = {
   id: string;
@@ -78,8 +77,8 @@ const fetchTotalCredits = async () => {
   const [status, setStatus] = useState<null | string>(null);
   const [loading, setLoading] = useState(false);
   const [showPhoneNumberEntry, setShowPhoneNumberEntry] = useState(false);
-  const [showPhoneCodeEntry, setShowPhoneCodeEntry] = useState(false);
   const [phoneNumberInput, setPhoneNumberInput] = useState("");
+  const [showPhoneCodeEntry, setShowPhoneCodeEntry] = useState(false);
   const [phoneCodeInput, setPhoneCodeInput] = useState("");
   const [phoneVerificationError, setPhoneVerificationError] = useState("");
   const [phoneVerificationLoading, setPhoneVerificationLoading] = useState(false);
@@ -299,10 +298,8 @@ useEffect(() => {
     setPhoneVerificationCustomerId(customerid)
     setPendingBookingPayload(payload)
     setPhoneNumberInput("")
-    setPhoneCodeInput("")
     setPhoneVerificationError("")
     setShowPhoneNumberEntry(true)
-    setShowPhoneCodeEntry(false)
     setStatus(null)
     setLoading(false)
   }
@@ -322,15 +319,22 @@ useEffect(() => {
 
     setPhoneVerificationLoading(true)
     setPhoneVerificationError("")
-    const generated = await phonenumbercodegenerator(phoneVerificationCustomerId)
-    setPhoneVerificationLoading(false)
+    const resultofenteringnumber = await enteringnumber(phoneVerificationCustomerId, phoneNumberInput)
 
-    if (generated === 1) {
-      setShowPhoneNumberEntry(false)
-      setShowPhoneCodeEntry(true)
-      toast.success("Verification code sent")
+    setFormData((prev) => ({ ...prev, phone: phoneNumberInput }))
+    setShowPhoneNumberEntry(false)
+
+    if (resultofenteringnumber === 0) {
+      toast.error("Phone number could not be saved, but your booking will still be submitted.")
+    }
+
+    if (pendingBookingPayload) {
+      await submitBooking({
+        ...pendingBookingPayload,
+        phone: phoneNumberInput,
+      })
     } else {
-      setPhoneVerificationError("Could not send verification code. Please try again.")
+      setPhoneVerificationLoading(false)
     }
   }
   const handlePhoneCodeOk = async () => {
@@ -405,6 +409,7 @@ useEffect(() => {
     console.log("Got the response")
     if (finalresponse.ok) {
       console.log("number is added")
+      toast.success("Phone number added successfully")
       return 1
     }else{
       alert(finalresponse['message'])
@@ -526,14 +531,14 @@ useEffect(() => {
 
       console.log("passing data: ", payload)
 
-      const bookornot = await verifythephonenumber(payload.customer_id)
-
-      if (bookornot ==0) {
+      if (!payload.phone || payload.phone.trim().length === 0) {
         openPhoneVerification(payload.customer_id, payload)
         return
       }
       console.log("Before submiting is credit used value : ", iscreditused
       )
+      await submitBooking(payload);
+      return;
       const res = await fetch("/api/functions/create-booking", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -884,22 +889,6 @@ setiscreditused(true)
         setShowPhoneNumberEntry(false)
         setPendingBookingPayload(null)
         setLoading(false)
-      }}
-    />
-    <PhoneCodeEntry
-      open={showPhoneCodeEntry}
-      code={phoneCodeInput}
-      error={phoneVerificationError}
-      loading={phoneVerificationLoading}
-      onCodeChange={(value) => {
-        setPhoneCodeInput(value)
-        setPhoneVerificationError("")
-      }}
-      onSubmit={handlePhoneCodeOk}
-      onBack={() => {
-        setShowPhoneCodeEntry(false)
-        setShowPhoneNumberEntry(true)
-        setPhoneVerificationError("")
       }}
     />
     </>
