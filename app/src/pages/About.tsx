@@ -282,9 +282,10 @@ const About = () => {
     getourmission()
   }, []);
 
-  const [aboutus, setaboutus] = useState("")
-   const [ourstory, setourstory] = useState("")
-    const [ourmission ,setourmission] = useState("")
+  const [aboutus, setaboutus] = useState([])
+   const [ourstory, setourstory] = useState([])
+    const [ourmission ,setourmission] = useState([])
+
    const getaboutus = async () => {
         const response = await fetch("/api/functions/getmetadata/about_us", {
           headers : {
@@ -294,7 +295,8 @@ const About = () => {
         })
           if(response.status == 200){
         const finalresponse = await  response.json()
-            setaboutus(finalresponse['data'])
+            setaboutus(finalresponse['data'].split(" "))
+              console.log(aboutus)
       }
       else{
         const finalresponse = await response.json()
@@ -311,7 +313,7 @@ const About = () => {
         })
           if(response.status == 200){
         const finalresponse = await  response.json()
-            setourstory(finalresponse['data'])
+            setourstory(finalresponse['data'].split(" "))
       }
       else{
         const finalresponse = await response.json()
@@ -329,7 +331,7 @@ const About = () => {
         })
           if(response.status == 200){
         const finalresponse = await  response.json()
-            setourmission(finalresponse['data'])
+            setourmission(finalresponse['data'].split(""))
       }
       else{
         const finalresponse = await response.json()
@@ -412,12 +414,15 @@ const About = () => {
             About <span className="text-red-500">Mhasla Wheels</span>
           </h1>
           <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto">
-         {aboutus}
+         {aboutus.map((element)=>{
+          console.log(element)
+          if (element == "/n") {
+            return <br />
+          }
+          return `${element} `
+         })}
           </p>
-          <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto">
-            Your trusted transportation partner since 2020 — delivering comfort,
-            reliability, and trust on every road.
-          </p>
+        
 
           <div className="flex flex-col sm:flex-row justify-center gap-4 mt-10">
             <Button asChild variant="book" className="rounded-full px-8 py-3">
@@ -453,7 +458,14 @@ const About = () => {
             </p>
               */} 
               <p className="text-gray-400">
-                {ourstory}
+               {ourstory.map((element)=>{
+          console.log(element)
+          if (element == "/n") {
+            return <br />
+          }
+          return `${element} `;
+        }
+      )}
               </p>
           </div>
 
@@ -479,8 +491,15 @@ const About = () => {
           </p>
           */}
           <p className="text-lg text-gray-300">
-              {ourmission}
-        </p>
+              {ourmission.map((element)=>{
+          console.log(element)
+          if (element == "/n") {
+            return <br />
+          }
+          return `${element} `;
+        }
+      )}
+            </p>
           
         </div>
       </section>

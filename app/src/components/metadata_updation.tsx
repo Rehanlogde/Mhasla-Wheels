@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Globe, MapPin, PencilLine, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -42,29 +42,220 @@ const metadataFields: MetadataField[] = [
     placeholder: "Enter your story content",
     multiline: true,
   },
+  {
+    key: "our_mission",
+    label: "Our Mission",
+    placeholder: "Enter your mission content",
+    multiline: true,
+  },
 ];
 
-const initialValues = metadataFields.reduce<Record<string, string>>(
-  (accumulator, field) => {
-    accumulator[field.key] = "";
-    return accumulator;
-  },
-  {}
-);
-
 export default function MetadataUpdation() {
-  const [formValues, setFormValues] = useState<Record<string, string>>(initialValues);
+  
+  const [contactnumber, setcontactnumber] = useState(0)
+  const [email, setemail] = useState(0)
+  const [aboutus, setaboutus] = useState("")
+  const [address, setaddress] = useState("")
+  const [ourstory, setourstory] = useState("")
+  const [ourmission, setourmission] = useState("")
+  
+
+  const getcontactnumber = async () => {
+    try{
+    const response = await fetch("/api/functions/getmetadata/phone_number", {
+      method : 'GET'
+    })
+    const finalresponse = await response.json()
+    if (response.status==200) {
+      setcontactnumber(finalresponse['data'])
+    }
+    else{
+      toast.error(finalresponse['message'])
+    }  
+    }
+    catch(e)
+    {
+      toast.error("Unexpected error !")
+    }
+  }
+  
+  const getourmission = async () => {
+    try{
+    const response = await fetch("/api/functions/getmetadata/our_mission", {
+      method : 'GET'
+    })
+    const finalresponse = await response.json()
+    if (response.status==200) {
+    setourmission(finalresponse['data'])
+    }
+    else{
+      toast.error(finalresponse['message'])
+    }  
+    }
+    catch(e)
+    {
+      toast.error("Unexpected error !")
+    }
+  }
+  
+  const getaboutus = async () => {
+    try{
+    const response = await fetch("/api/functions/getmetadata/about_us", {
+      method : 'GET'
+    })
+    const finalresponse = await response.json()
+    if (response.status==200) {
+      setaboutus(finalresponse['data'])
+    }
+    else{
+      toast.error(finalresponse['message'])
+    }  
+    }
+    catch(e)
+    {
+      toast.error("Unexpected error !")
+    }
+  }
+  
+  const getemail = async () => {
+    try{
+    const response = await fetch("/api/functions/getmetadata/emailid", {
+      method : 'GET'
+    })
+    const finalresponse = await response.json()
+    if (response.status==200) {
+    setemail(finalresponse['data'])
+    }
+    else{
+      toast.error(finalresponse['message'])
+    }  
+    }
+    catch(e)
+    {
+      toast.error("Unexpected error !")
+    }
+  }
+  
+  
+  const getourstory = async () => {
+    try{
+    const response = await fetch("/api/functions/getmetadata/our_story", {
+      method : 'GET'
+    })
+    const finalresponse = await response.json()
+    if (response.status==200) {
+      setourstory(finalresponse['data'])
+    }
+    else{
+      toast.error(finalresponse['message'])
+    }  
+    }
+    catch(e)
+    {
+      toast.error("Unexpected error !")
+    }
+  }
+
+  const getaddress = async () => {
+    try {
+      const response = await fetch("/api/functions/getmetadata/address", {
+        method: "GET",
+      })
+      const finalresponse = await response.json()
+      if (response.status == 200) {
+        setaddress(finalresponse["data"])
+      }
+      else{
+        toast.error(finalresponse["message"])
+      }
+    }
+    catch(e)
+    {
+      toast.error("Unexpected error !")
+    }
+  }
+  const callallgetmethods = async () => {
+    
+   await getcontactnumber()
+   await  getaboutus()
+    await getourmission()
+    await getourstory()
+    await getemail()
+    await getaddress()
+  }
+  
+  useEffect(()=>{
+    callallgetmethods()
+    }, [])
+
+  const getFieldValue = (key: string) => {
+    switch (key) {
+      case "phone_number":
+        return String(contactnumber || "")
+      case "emailid":
+        return String(email || "")
+      case "about_us":
+        return aboutus
+      case "address":
+        return address
+      case "our_story":
+        return ourstory
+      case "our_mission":
+        return ourmission
+      default:
+        return ""
+    }
+  };
 
   const handleChange = (key: string, value: string) => {
-    setFormValues((previous) => ({
-      ...previous,
-      [key]: value,
-    }));
+    switch (key) {
+      case "phone_number":
+        setcontactnumber(Number(value))
+        break
+      case "emailid":
+        setemail(value as any)
+        break
+      case "about_us":
+        setaboutus(value)
+        break
+      case "address":
+        setaddress(value)
+        break
+      case "our_story":
+        setourstory(value)
+        break
+      case "our_mission":
+        setourmission(value)
+        break
+      default:
+        break
+    }
   };
+
+  const getUpdatedValue = (key: string) => {
+    switch (key) {
+      case "phone_number":
+        return String(contactnumber || "")
+      case "emailid":
+        return String(email || "")
+      case "about_us":
+        return aboutus
+      case "address":
+        return address
+      case "our_story":
+        return ourstory
+      case "our_mission":
+        return ourmission
+      default:
+        return ""
+    }
+  };
+
 
   const updatedata = async (updatefieldname: string, updatedata: string) => {
     console.log(`updatefield name : ${updatefieldname}, updatedata : ${updatedata} `);
 
+    
     const response = await fetch("/api/functions/updatemetadata", {
         headers : {
             'Content-type' :'application/json'
@@ -133,7 +324,7 @@ export default function MetadataUpdation() {
 
                       <InputTag
                         id={field.key}
-                        value={formValues[field.key]}
+                        value={getFieldValue(field.key)}
                         onChange={(event) => handleChange(field.key, event.target.value)}
                         placeholder={field.placeholder}
                         rows={field.multiline ? 4 : undefined}
@@ -150,9 +341,9 @@ export default function MetadataUpdation() {
                       variant="book"
                       onClick={async ()=>{
                         console.log(field.key)
-                         console.log(formValues[field.key]);
+                         console.log(getUpdatedValue(field.key));
                         
-                        await updatedata(field.key, formValues[field.key])
+                        await updatedata(field.key, getUpdatedValue(field.key))
                       }}
                       className="h-12 min-w-[150px] rounded-2xl px-6 text-sm shadow-[0_12px_30px_rgba(220,38,38,0.2)]"
                     >
