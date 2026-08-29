@@ -47,7 +47,11 @@ export default function Addvehicles() {
         if(finalres.ok)
         {
           toast.success("Vehicle added !")
-          window.location.reload()
+          setTimeout(() => {
+            
+            window.location.href = "/admin/fleet";
+          }, 1000);
+
         }
         else{
           console.log("error occurred  while adding vehicles!", finalres.message)

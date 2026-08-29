@@ -94,7 +94,8 @@ useEffect(()=>{
     const finalresponse = await response.json()
     if (finalresponse['ok']) {
       alert(finalresponse['message'])
-      await getdata()
+      //await getdata()
+window.location.reload()
     }
     else{
       toast.error(finalresponse['message'])
@@ -121,6 +122,7 @@ useEffect(()=>{
       console.log(finalresponse)
       if (finalresponse.ok) {
         alert("Insertion successfull")
+        window.location.reload()
         await getdata()
       }else{
         toast.error(finalresponse['message'])

@@ -161,7 +161,8 @@ else{
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
           <div className="w-full max-w-2xl">
             {/* Pass the data and a function to close the form */}
-           <EditFleet vehicledata = {vehicletoedit}/>
+           <EditFleet
+            vehicledata = {vehicletoedit} onclose = {()=> setvehicletoedit(null)}/>
           </div>
         </div>
       )}

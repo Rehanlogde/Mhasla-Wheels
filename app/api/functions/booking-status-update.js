@@ -8,6 +8,8 @@ import { sendsmsmessage } from "./whatsappops.js"
 
 export default async function updatingbookingandcarstatus(req, res) {
   try {
+ var driverName
+ var driverContact
     const { bookingid, status, vehicleid, emailid, pickup, destination, vehiclename, driverid, fare } = req.body
 
     console.log("got the data : ", bookingid, status, vehicleid)
@@ -18,9 +20,10 @@ if (status!="Rejected") {
     console.log("This is the driverid : ", driverid)
     const result1 = await pool.query(query, [driverid])
     console.log("this is tthe length : ", result1.rowCount)
-    const driverName = result1.rows[0]?.name || "-";
+     driverName = result1.rows[0]?.name || "-";
     console.log(driverName)
-    const driverContact = result1.rows[0]?.contact_number || "-";
+     driverContact = result1.rows[0]?.contact_number || "-";
+
 }
     const dbquery = "UPDATE bookings set status = $1 where booking_code = $2"
     const result = await pool.query(dbquery, [status, bookingid])
@@ -54,7 +57,7 @@ if (status!="Rejected") {
       }
 
       switch (status) {
-        case "Confirmed": await sendsmsmessage(
+        case "Confirmed":/* await sendsmsmessage(
           `Booking Confirmed
 ID:${bookingid}
 Vehicle:${vehiclename || "-"}
@@ -62,7 +65,7 @@ Pickup:${pickup || "-"}
 Drop:${destination || "-"}
 Driver:${driverName}
 Contact:${driverContact}`
-        );
+        );*/
           await sendmail("Booking Confirmed ✅", emailid, `
       <p>Hi there!</p>
       <p>Great news — <strong>your ride has been confirmed!</strong> We're all set and ready to get you where you need to go.</p>
@@ -114,7 +117,7 @@ Contact:${driverContact}`
       `)
           break;
         case "Started":
-          await sendsmsmessage(
+          /*await sendsmsmessage(
             `Ride Started 🚗
 Booking: ${bookingid}
 Vehicle: ${vehiclename || "-"}
@@ -140,6 +143,7 @@ Contact: ${driverContact}`
         <img src="https://raw.githubusercontent.com/Rehanlogde/Mhasla_wheels_images/main/Journey_starting.png" alt="Have a safe journey!" style="max-width:100%;border-radius:10px;border:1px solid #2a2a2a;" />
       </div>
     `)
+    */
           await sendmailtoadmin("Ride Started — Admin Notification", `
       <p>Dear Admin,</p>
       <p>The following ride has been <strong style="color:#facc15;">started</strong>. The assigned vehicle status has been updated to <strong>occupied</strong>.</p>
@@ -182,7 +186,7 @@ Contact: ${driverContact}`
             else{
               console.log("UPDATION failed")
             }
-          await sendsmsmessage(
+       /*   await sendsmsmessage(
             `Ride Completed 🚗
 Booking: ${bookingid}
 Vehicle: ${vehiclename || "-"}
@@ -192,7 +196,7 @@ Driver: ${driverName}
 Contact: ${driverContact}
 Status: Completed
 Thanks for riding with Mhasla Wheels!`
-          );
+          );*/
 
           await sendmail("Ride Completed 🏁", emailid, `
       <p>Hello!</p>
@@ -245,14 +249,14 @@ Thanks for riding with Mhasla Wheels!`
     )
           break;
         case "Rejected":
-          await sendsmsmessage(
+          /*await sendsmsmessage(
             `Booking Rejected
 ID:${bookingid}
 Vehicle:${vehiclename || "-"}
 Pickup:${pickup || "-"}
 Drop:${destination || "-"}
 Status:Rejected`
-          ); await sendmail("Booking Update ❌", emailid, `
+          ); */await sendmail("Booking Update ❌", emailid, `
       <p>Hi there,</p>
       <p>We're really sorry to let you know that <strong>your booking has been rejected</strong>. 😔</p>
       <table role="presentation" cellpadding="6" cellspacing="0" style="font-size:14px;color:#d4d4d4;line-height:1.6;border:1px solid #2a2a2a;border-radius:8px;overflow:hidden;width:100%;background-color:#1a1a1a;">

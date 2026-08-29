@@ -10,6 +10,15 @@ const Fleet = () => {
   const [loading, setLoading] = useState(true);
   const [liveUpdating, setLiveUpdating] = useState(false);
 
+  const gettoken =  () => {
+    const token = localStorage.getItem("CUSTOMER_TOKEN")
+    if (token == null) {
+        return false
+    }
+    else{
+      return true
+    }
+  }
   const fetchVehicles = async () => {
     try {
       setLoading(true);
@@ -137,10 +146,19 @@ const Fleet = () => {
 
       <Footer />
 
-      <BookingModal
-        isOpen={isBookingModalOpen}
-        onClose={() => setIsBookingModalOpen(false)}
-      />
+     {
+  gettoken() ? (
+    <BookingModal
+      isOpen={isBookingModalOpen}
+      onClose={() => setIsBookingModalOpen(false)}
+    />
+  ) : (
+    (() => {
+      window.location.href = "/login";
+      return null;
+    })()
+  )
+}
     </div>
   );
 };

@@ -74,6 +74,7 @@ import { CreateFare, DeleteFares, GetFares, UpdateFare } from "./functions/CRUD_
 import * as getCreditsapp from "./Application/get-credits.js";
 import  addmetadata from "./functions/add_metadata.js";
 import Getmetadata from "./functions/get_metadata.js";
+import  Useremailtocheck  from "./functions/checkuseremail.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -189,6 +190,7 @@ app.all("/api/functions/editFleetVehicle", wrap(editfleet) )
 app.all("/api/functions/deleteFleetVehicle", wrap(deleteVehicle) )
 app.all("/api/functions/getusers", wrap(getUserData) )
 app.all("/api/functions/makesuperuseradminaccess", wrap(allowAdminAcess))
+app.all('/api/functions/checkuseremail', Useremailtocheck)
 
 app.all("/api/functions/getusercredits", wrap(getCredits))
 app.get("/api/functions/get-fares-admin", GetFares)

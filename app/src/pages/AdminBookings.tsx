@@ -52,7 +52,7 @@ export default function AdminBookings() {
   const [changingDriverFor, setChangingDriverFor] = useState<any>(null);
   useEffect(() => {
     fetchBookings();
-  }, []);
+  }, [reload]);
 
   useEffect(() => {
     applyFilters();
@@ -224,7 +224,7 @@ export default function AdminBookings() {
     { label: "Total", count: bookings.length, color: "text-white" },
     { label: "Pending", count: bookings.filter((b) => b.status === "pending").length, color: "text-yellow-400" },
     { label: "Confirmed", count: bookings.filter((b) => b.status === "Confirmed").length, color: "text-green-400" },
-    { label: "Rejected", count: bookings.filter((b) => b.status === "rejected").length, color: "text-red-500" },
+    { label: "Rejected", count: bookings.filter((b) => b.status === "Rejected").length, color: "text-red-500" },
     { label: "Started", count: bookings.filter((b) => b.status === "Started" || b.status === "in_progress").length, color: "text-yellow-200" },
     { label: "Completed", count: bookings.filter((b) => b.status === "Finished" || b.status === "completed").length, color: "text-blue-400" },
 { 
@@ -324,7 +324,7 @@ export default function AdminBookings() {
                         ? "text-yellow-400"
                         : b.status === "Confirmed"
                           ? "text-green-400"
-                          : b.status === "rejected"
+                          : b.status === "Rejected" ? "text-red-500" : b.status === "rejected"
                             ? "text-red-500"
                             
                           : b.status === "Started"

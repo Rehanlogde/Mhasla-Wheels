@@ -38,9 +38,9 @@ export default async function Addvehiclesn(req,res) {
     await mkdir(path.dirname(finalpath), { recursive: true })
     await writeFile(finalpath, imageBuffer)
 
-    const dbquery = "INSERT INTO mw_vehicles VALUES($1,$2,$3,$4,$5,$6,$7,$8)"
+    const dbquery = "INSERT INTO mw_vehicles VALUES($1,$2,$3,$4,$5,$6,$7,$8, $9)"
     const finalpath2 = process.env.DBSAVINGPATH + safeImageName
-    await pool.query(dbquery, [vehicleid, vechiclename, vehiclesafety, capacity, year, priceperkm, safeImageName, finalpath])
+    await pool.query(dbquery, [vehicleid, vechiclename, vehiclesafety, capacity, year, priceperkm, safeImageName, finalpath , "available"])
 
     return res.json({
         ok : true,

@@ -1,12 +1,12 @@
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Save } from "lucide-react";
+import { Save, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 
-export default function EditFleet({vehicledata}) {
+export default function EditFleet({vehicledata, onclose}) {
     
     const [vehiclename, setvehiclename] = useState(vehicledata['vehiclename'])
     
@@ -50,6 +50,14 @@ else{
     }
     return (
         <div className="bg-[#111] border border-gray-800 rounded-2xl p-6 text-white max-w-2xl mx-auto shadow-xl">
+            <button
+                type="button"
+                onClick={onclose}
+                className="absolute top-4 right-4 text-gray-400 hover:text-white hover:bg-gray-800 rounded-full p-2 transition"
+            >
+                <X className="h-5 w-5" />
+            </button>
+
             <h2 className="text-2xl font-bold mb-6 border-b border-gray-800 pb-4 text-red-500">
                 Edit {vehiclename}
             </h2>
@@ -57,7 +65,7 @@ else{
             <div className="space-y-4">
                 {/* Vehicle ID - Non Editable */}
                 <div className="space-y-1.5">
-                    <Label className="text-gray-400 text-xs uppercase tracking-wider">Vehicle ID (Locked)</Label>
+                    <Label className="text-gray-400 text-xs uppercase tracking-wider">Vehicle ID (Non Editable)</Label>
                     <Input 
                         value={vehicleid} 
                         readOnly 

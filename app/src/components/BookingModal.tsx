@@ -102,7 +102,6 @@ interface BookingModalProps {
 
 const BookingModal = ({ isOpen, onClose }: BookingModalProps) => {
   if (!isOpen) return null;
-
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <div className="bg-card rounded-2xl shadow-floating max-w-4xl w-full mx-4 animate-fade-in-up relative max-h-[calc(100vh-2rem)] flex flex-col overflow-hidden">

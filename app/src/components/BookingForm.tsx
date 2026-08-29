@@ -394,9 +394,9 @@ useEffect(() => {
     const finalresponse=  await result.json()
     if (finalresponse.ok) {
       console.log("User have phone number")
-      return 1
+      return true
     }else{
-      return 0
+      return false
     }
   } 
   const enteringnumber= async (customerid,phonenumber)=>{
@@ -539,13 +539,17 @@ useEffect(() => {
       console.log("passing data: ", payload)
 
       if (!payload.phone || payload.phone.trim().length === 0) {
-        openPhoneVerification(payload.customer_id, payload)
-        return
+        var phonenumberverification = await verifythephonenumber(customer.id)
+        console.log(`phone number verification : ${phonenumberverification}`)
+        if (!phonenumberverification) {
+          openPhoneVerification(payload.customer_id, payload)
+        }
+        //return
       }
       console.log("Before submiting is credit used value : ", iscreditused
       )
       await submitBooking(payload);
-      return;
+      //return;
       const res = await fetch("/api/functions/create-booking", {
         method: "POST",
         headers: { "Content-Type": "application/json" },

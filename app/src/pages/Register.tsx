@@ -350,6 +350,7 @@ const Register = () => {
         const result = await register(name, email, password, phone);
         console.log(result);
         if (result.error) {
+          console.log("here it is failing")
           toast.error("Registration failed", { description: result.error });
           return;
         }
@@ -373,7 +374,34 @@ const Register = () => {
     setCodeError("");
     setLoading(false);
   };
-
+  async function checkemail() {
+    try{
+      console.log("starting")
+    const result = await fetch("/api/functions/checkuseremail", {
+      headers : {
+        'Content-type' : 'application/json'
+      },
+      body : JSON.stringify({
+        'email' : email
+      }),
+      method : 'POST'
+    })
+    console.log('issue occurre')
+    if (result.status == 200) {
+      console.log('sending true')
+      return true
+    }
+    else{
+      var resultjson = await result.json() 
+      toast.error("Registration failed",  {description : resultjson['message']} )
+      return false
+    }
+  }
+  catch(e)
+  {
+    console.log(e)
+  }
+  }
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -390,8 +418,12 @@ const Register = () => {
       return;
     }
 
-    setLoading(true);
     try {
+      console.log("sending verification check")
+      var sendverification  = await checkemail()
+      if (sendverification) {
+        setLoading(true);
+        
       const sent = await sendVerificationCode(email);
       if (sent) {
         setLoading(false);
@@ -399,13 +431,14 @@ const Register = () => {
       } else {
         toast.error("Server issue, could not send verification code");
         setLoading(false)
-      }
+      }}
     } catch (err: any) {
       toast.error("Registration failed", {
         description: err.message || "Something went wrong",
       });
       setLoading(false);
     }
+    
   };
 
   // ✅ Supabase-safe fallback (prevents crash)

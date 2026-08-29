@@ -39,8 +39,10 @@ import { toast } from "sonner";
         else{
           console.log("created")
           msg  =  finalres.message
-            toast.success(msg)
-            window.location.reload()
+          toast.success(msg)
+          setTimeout(() => {window.location.href = "/admin/showdrivers";
+
+}, 1000);
   
         }
     }
