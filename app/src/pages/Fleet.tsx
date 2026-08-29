@@ -1,4 +1,4 @@
-import { Car, Users, Fuel, Shield, Star, CarFront } from "lucide-react";
+import { Car, Users, Fuel, Shield, Star, CarFront, Brush, Sparkles, AirVent } from "lucide-react";
 import Footer from "@/components/Footer";
 import BookingModal from "@/components/BookingModal";
 import { useEffect, useState } from "react";
@@ -15,7 +15,8 @@ const Fleet = () => {
       setLoading(true);
       const res = await fetch("/api/functions/get-vehicles");
       const json = await res.json();
-
+        console.log("printing vehicles")
+      console.log(json)
       if (!res.ok) {
         throw new Error(json?.error || "Failed to fetch vehicles");
       }
@@ -150,7 +151,7 @@ const Fleet = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div>
               <Car className="mx-auto mb-3 text-red-400" size={28} />
-              <div className="text-3xl font-bold">{vehicles.length}+</div>
+              <div className="text-3xl font-bold">{vehicles.length}</div>
               <div className="text-gray-400 text-sm">Total Vehicles</div>
             </div>
             <div>
@@ -159,14 +160,15 @@ const Fleet = () => {
               <div className="text-gray-400 text-sm">Safety Certified</div>
             </div>
             <div>
-              <Fuel className="mx-auto mb-3 text-red-400" size={28} />
-              <div className="text-3xl font-bold">25+</div>
-              <div className="text-gray-400 text-sm">Avg Fuel Efficiency</div>
+              <Sparkles className="mx-auto mb-3 text-red-400" size={28} />
+              <div className="text-3xl font-bold">100%</div>
+              <div className="text-gray-400 text-sm">Cleanliness</div>
             </div>
             <div>
-              <Star className="mx-auto mb-3 text-red-400" size={28} />
-              <div className="text-3xl font-bold">4.8</div>
-              <div className="text-gray-400 text-sm">Average Rating</div>
+              
+              <AirVent className="mx-auto mb-3 text-red-400" size={28} />
+              <div className="text-3xl font-bold">FREE</div>
+              <div className="text-gray-400 text-sm">Air Conditioner Travel</div>
             </div>
           </div>
         </div>

@@ -64,17 +64,18 @@ export async function handler(event) {
     const booking_code = `MB-${uuidv4().split("-")[0]}`;
     const id = uuidv4();
 
-    // 🛑 Phase 3: Prevent duplicate bookings
+    // ! Phase 3: Prevent duplicate bookings
     if (customer_id && pickup_location && depart_date) {
       const duplicateCheck = await pool.query(
         `SELECT id FROM bookings 
          WHERE customer_id = $1 
            AND pickup_location = $2 
+           AND journey_type = $5
            AND COALESCE(drop_location, '') = COALESCE($3, '')
            AND depart_date = $4
            AND status NOT IN ('rejected', 'completed')
          LIMIT 1`,
-        [customer_id, pickup_location, drop_location || '', depart_date]
+        [customer_id, pickup_location, drop_location || '', depart_date, journey_type]
       );
 
       if (duplicateCheck.rows.length > 0) {

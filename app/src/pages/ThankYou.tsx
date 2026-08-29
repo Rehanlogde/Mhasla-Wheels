@@ -33,16 +33,82 @@ const ThankYou = () => {
   }, []);
 
   const formatBookingDate = (b: BookingData) => {
-    if (b.depart_date) {
-      const dt = new Date(`${b.depart_date}T${b.depart_time || "00:00"}:00`);
-      return dt.toLocaleString();
-    }
-    if (b.ride_date) {
-      return new Date(b.ride_date).toLocaleString();
-    }
-    return "N/A";
-  };
+  if (b.depart_date) {
+    // Extract only YYYY-MM-DD from either:
+    // "2026-08-20"
+    // or "2026-08-20T18:30:00.000Z"
+    const datePart = b.depart_date.split("T")[0];
 
+    const [year, month, day] = datePart.split("-");
+
+    if (!year || !month || !day) {
+      return "Invalid Date";
+    }
+
+    const monthNames = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+
+    const monthName = monthNames[parseInt(month, 10) - 1];
+
+    let timeText = "";
+
+    if (b.depart_time) {
+      const [hoursString, minutes] = b.depart_time.split(":");
+
+      let hours = parseInt(hoursString, 10);
+
+      if (!isNaN(hours)) {
+        const ampm = hours >= 12 ? "PM" : "AM";
+        hours = hours % 12 || 12;
+
+        timeText = ` at ${hours}:${minutes || "00"} ${ampm}`;
+      }
+    }
+
+    return `${monthName} ${parseInt(day, 10)}, ${year}${timeText}`;
+  }
+
+  if (b.ride_date) {
+    const datePart = b.ride_date.split("T")[0];
+
+    const [year, month, day] = datePart.split("-");
+
+    if (!year || !month || !day) {
+      return "Invalid Date";
+    }
+
+    const monthNames = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+
+    return `${monthNames[parseInt(month, 10) - 1]} ${parseInt(day, 10)}, ${year}`;
+  }
+
+  return "N/A";
+};
   return (
     <div className="min-h-screen bg-[#121212] text-white flex flex-col">
       {/* Header */}

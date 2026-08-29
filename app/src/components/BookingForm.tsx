@@ -23,6 +23,13 @@ type Vehicle = {
 };
 
 export default function BookingForm() {
+  const formatLocalDate = (date: Date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+};
   const { customer, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [totalCredits , setCredits] = useState(0)
@@ -684,31 +691,31 @@ setiscreditused(true)
           <label className="block text-sm text-gray-400 mb-1">
             Pickup Date & Time
           </label>
-          <ReactDatePicker
-            selected={
-              formData.depart_date
-                ? new Date(
-                  formData.depart_date +
-                  "T" +
-                  (formData.depart_time || "00:00")
-                )
-                : null
-            }
-            onChange={(date: Date | null) => {
-              if (date) {
-                setFormData((prev) => ({
-                  ...prev,
-                  depart_date: date.toISOString().split("T")[0],
-                  depart_time: date.toTimeString().slice(0, 5),
-                }));
-              }
-            }}
-            showTimeSelect
-            dateFormat="MMMM d, yyyy h:mm aa"
-            placeholderText="Select date and time"
-            className="w-full p-3 bg-[#111] border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-red-500 outline-none"
-            minDate={new Date()}
-          />
+         <ReactDatePicker
+  selected={
+    formData.depart_date
+      ? new Date(
+          formData.depart_date +
+          "T" +
+          (formData.depart_time || "00:00")
+        )
+      : null
+  }
+  onChange={(date: Date | null) => {
+    if (date) {
+      setFormData((prev) => ({
+        ...prev,
+        depart_date: formatLocalDate(date),
+        depart_time: date.toTimeString().slice(0, 5),
+      }));
+    }
+  }}
+  showTimeSelect
+  dateFormat="MMMM d, yyyy h:mm aa"
+  placeholderText="Select date and time"
+  className="w-full p-3 bg-[#111] border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-red-500 outline-none"
+  minDate={new Date()}
+/>
         </div>
 
         {formData.journey_type === "round_trip" && (
@@ -716,35 +723,31 @@ setiscreditused(true)
             <label className="block text-sm text-gray-400 mb-1">
               Return Date & Time
             </label>
-            <ReactDatePicker
-              selected={
-                formData.return_date
-                  ? new Date(
-                    formData.return_date +
-                    "T" +
-                    (formData.return_time || "00:00")
-                  )
-                  : null
-              }
-              onChange={(date: Date | null) => {
-                if (date) {
-                  setFormData((prev) => ({
-                    ...prev,
-                    return_date: date.toISOString().split("T")[0],
-                    return_time: date.toTimeString().slice(0, 5),
-                  }));
-                }
-              }}
-              showTimeSelect
-              dateFormat="MMMM d, yyyy h:mm aa"
-              placeholderText="Select return date and time"
-              className="w-full p-3 bg-[#111] border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-red-500 outline-none"
-              minDate={
-                formData.depart_date
-                  ? new Date(formData.depart_date)
-                  : new Date()
-              }
-            />
+                  <ReactDatePicker
+  selected={
+    formData.depart_date
+      ? new Date(
+          formData.depart_date +
+          "T" +
+          (formData.depart_time || "00:00")
+        )
+      : null
+  }
+  onChange={(date: Date | null) => {
+    if (date) {
+      setFormData((prev) => ({
+        ...prev,
+        depart_date: formatLocalDate(date),
+        depart_time: date.toTimeString().slice(0, 5),
+      }));
+    }
+  }}
+  showTimeSelect
+  dateFormat="MMMM d, yyyy h:mm aa"
+  placeholderText="Select date and time"
+  className="w-full p-3 bg-[#111] border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-red-500 outline-none"
+  minDate={new Date()}
+/>
           </div>
         )}
       </div>

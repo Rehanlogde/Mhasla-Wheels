@@ -99,7 +99,7 @@ const Fleet = () => {
                     </div>
 
                     <p className="text-gray-400 text-sm mb-4 ">
-                      {vehicle.safety || "none"}
+                      {vehicle.vehiclesafety || "none"}
                     </p>
                       <p className="text-gray-400 text-sm mb-4 ">Year of purchase: {vehicle.year}</p>
                     <div className="flex items-center text-gray-400 text-sm mb-4">

@@ -186,7 +186,7 @@ Contact: ${driverContact}`
             `Ride Completed 🚗
 Booking: ${bookingid}
 Vehicle: ${vehiclename || "-"}
-Pickup: ${pickup || "-"}
+Pickup: ${pickup || "-"}  
 Drop: ${destination || "-"}
 Driver: ${driverName}
 Contact: ${driverContact}
