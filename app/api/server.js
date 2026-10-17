@@ -75,6 +75,7 @@ import * as getCreditsapp from "./Application/get-credits.js";
 import  addmetadata from "./functions/add_metadata.js";
 import Getmetadata from "./functions/get_metadata.js";
 import  Useremailtocheck  from "./functions/checkuseremail.js";
+import dashboardDataGet from "./Application/dashboard-data.js"
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -229,7 +230,8 @@ app.get("/app/api/get-places-names", wrap(PlacenamesGet))
 app.get("/app/api/fare-calculation", wrap(Appfarecalculation))
 app.get("/app/api/get-drivers", wrap(Driverget))
 app.post("/app/api/create-booking", wrap(createbookingapp))
-app.post("/app/api/getusercredits", wrap(getCreditsapp))
+app.post("/app/api/getusercredits", wrap(getCreditsapp))  
+app.get("/app/api/getuserdashboarddetails", dashboardDataGet)
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {

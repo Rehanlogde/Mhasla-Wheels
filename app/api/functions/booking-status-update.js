@@ -125,7 +125,7 @@ Pickup: ${pickup || "-"}
 Drop: ${destination || "-"}
 Driver: ${driverName}
 Contact: ${driverContact}`
-          );
+          );*/
           await sendmail("Your Ride Has Started 🚀", emailid, `
       <p>Hey!</p>
       <p><strong>Your ride is on the move!</strong> Your driver is heading to pick you up. Buckle up and enjoy the journey!</p>
@@ -143,7 +143,7 @@ Contact: ${driverContact}`
         <img src="https://raw.githubusercontent.com/Rehanlogde/Mhasla_wheels_images/main/Journey_starting.png" alt="Have a safe journey!" style="max-width:100%;border-radius:10px;border:1px solid #2a2a2a;" />
       </div>
     `)
-    */
+    
           await sendmailtoadmin("Ride Started — Admin Notification", `
       <p>Dear Admin,</p>
       <p>The following ride has been <strong style="color:#facc15;">started</strong>. The assigned vehicle status has been updated to <strong>occupied</strong>.</p>

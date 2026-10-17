@@ -69,7 +69,7 @@ console.log(email, password)
             JWT_SECRET,
             { expiresIn: "7d" }
         );
-
+console.log('success returning')
         return {
             statusCode: 200,
             body: JSON.stringify({
